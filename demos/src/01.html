@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="../utils/phaser.min.js"></script>
+  </head>
+  <body></body>
+</html>
+<script>
+  class MyGame extends Phaser.Scene {
+    #roles = [];
+    constructor({ images = {} }) {
+      super();
+      initImages(images);
+    }
+
+    // source load
+    initImages = (images) => {
+      Object.keys(images).forEach((key) => {
+        this.roles = [...this.roles, key];
+        this.load.image(key, images[key]);
+      });
+    };
+
+    // create scene
+    createRole = (reqRoles = []) => {
+      reqRoles.forEach((role) => {
+        this.add.image({ ...role });
+      });
+    };
+  }
+
+  const { images } = {
+    roles: {},
+    images: [],
+  };
+
+  const game = new MyGame({ images });
+</script>
