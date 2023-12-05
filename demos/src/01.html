@@ -10,32 +10,57 @@
 </html>
 <script>
   class MyGame extends Phaser.Scene {
-    #roles = [];
-    constructor({ images = {} }) {
-      super();
-      initImages(images);
+    roles = [
+      {
+        type: "image",
+        args: [400, 300, "bg"],
+      },
+    ];
+    images = ["../assets/bg.png"];
+    // source load
+    preload() {
+      this.images.forEach((img) => {
+        const key = img.match(/assets\/(.*)\.png/)[1];
+        this.load.image(key, img);
+      });
+      this.load.spritesheet("fish1", "../assets/fish1.png", {
+        frameWidth: 55,
+        frameHeight: 37,
+        startFrame: 0,
+        endFrame: 3,
+      });
     }
 
-    // source load
-    initImages = (images) => {
-      Object.keys(images).forEach((key) => {
-        this.roles = [...this.roles, key];
-        this.load.image(key, images[key]);
-      });
-    };
-
     // create scene
-    createRole = (reqRoles = []) => {
-      reqRoles.forEach((role) => {
-        this.add.image({ ...role });
+    create() {
+      this.roles.forEach((role) => {
+        console.log("role", role);
+        this.add[role.type](...role.args);
       });
-    };
+
+      const fish1Animation = this.anims.create({
+        key: "swim",
+        frames: this.anims.generateFrameNumbers("fish1"),
+        frameRate: 4,
+      });
+
+      const sprite = this.add.sprite(50, 300, "fish1").setScale(1);
+
+      sprite.play({ key: "swim", repeat: 7 });
+    }
   }
 
-  const { images } = {
-    roles: {},
-    images: [],
+  const config = {
+    type: Phaser.AUTO,
+    width: 800,
+    height: 600,
+    scene: MyGame,
+    physics: {
+      default: "arcade",
+      arcade: {
+        gravity: { y: 200 },
+      },
+    },
   };
-
-  const game = new MyGame({ images });
+  const startGame = new Phaser.Game(config);
 </script>
