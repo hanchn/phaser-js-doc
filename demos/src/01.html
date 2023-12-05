@@ -46,7 +46,15 @@
 
       const sprite = this.add.sprite(50, 300, "fish1").setScale(1);
 
-      sprite.play({ key: "swim", repeat: 7 });
+      sprite.play({ key: "swim", repeat: -1 });
+
+      this.tweens.add({
+        targets: sprite,
+        x: 750,
+        y: 400,
+        duration: 20000,
+        ease: "Linear",
+      });
     }
   }
 
