@@ -2,4 +2,4 @@
 
 #### demos 
 
-[01 create a canvas](./demos/src/01.html)
+[PhaserJS框架介绍](./demos/src/02.html)
