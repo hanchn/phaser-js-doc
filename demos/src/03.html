@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        margin: 0;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+    </style>
+    <script src="../utils/phaser.min.js"></script>
+  </head>
+  <body></body>
+</html>
+<script>
+  const { Game, Scene } = Phaser;
+  class MyGame extends Game {
+    preload() {
+      this.load.image("bg", "../assets/bg.png");
+      this.load.spritesheet("turtle", "../assets/seaTurtle.png", {
+        frameWidth: 178,
+        frameHeight: 187,
+        startFrame: 0,
+        endFrame: 5,
+      });
+    }
+    create() {
+      this.add.image(512, 384, "bg");
+      const sprite = this.add.sprite(200, 300, "turtle").setScale(1);
+      const swimAni = this.anims.create({
+        key: "swim",
+        frames: this.anims.generateFrameNumbers("turtle"),
+        frameRate: 10,
+      });
+      sprite.play({ key: "swim", repeat: -1 });
+      this.tweens.add({
+        targets: sprite,
+        x: 750,
+        y: 300,
+        duration: 20000,
+        ease: "Linear",
+      });
+    }
+  }
+  new Game({
+    width: "100%",
+    height: "100%",
+    scene: MyGame,
+  });
+</script>

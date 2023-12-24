@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="../utils/phaser.min.js"></script>
+  </head>
+  <body></body>
+</html>
+<script>
+  class MyGame extends Phaser.Scene {
+    // source load
+    preload() {
+      this.load.image("backend", "../assets/backend.png");
+      this.load.image("frontend", "../assets/frontend.png");
+    }
+
+    // create scene
+    create() {
+      const card = this.add.sprite(180, 251, "backend");
+      const quad = this.add.sprite(580, 251, "backend");
+
+      this.input.on(Phaser.Input.Events.POINTER_UP, (pointer) => {
+        this.filp(card);
+        this.filpQuad(quad);
+      });
+    }
+
+    filpQuad(card) {
+      const topLeftX = card.x;
+      const topLeftY = card.y;
+      const topRightX = card.x + card.width;
+      const topRightY = card.y;
+      const bottomLeftX = card.x;
+      const bottomLeftY = card.y + card.height;
+      const bottomRightX = card.x + card.width;
+      const bottomRightY = card.y + card.height;
+      const middleX = card.topLeftX + 580 * 0.5;
+      const extra = 20;
+      const chain = this.tweens.chain({
+        targets: card,
+        tweens: [
+          {
+            scale: 1.1,
+            duration: 300,
+          },
+          {
+            topLeftX: middleX,
+            topRightX: middleX,
+            topRightY: topRightY - extra,
+            bottomLeftX: middleX,
+            bottomRightX: middleX,
+            bottomRightY: bottomRightY + extra,
+            duration: 300,
+            delay: 200,
+            onComplate: () => {
+              if (card.texture.key == "backend") {
+                card.setTexture("frontend");
+              } else {
+                card.setTexture("backend");
+              }
+
+              card.topRightY = topRightY;
+              card.bottomRightY = bottomRightY;
+
+              card.topLeftY = topRightY - extra;
+              card.bottomLeftY = bottomRightY + extra;
+            },
+          },
+          {
+            topLeftX,
+            topLeftY,
+            topRightY,
+            topRightX,
+            bottomLeftX,
+            bottomLeftY,
+            bottomRightX,
+            bottomRightY,
+            duration: 300,
+          },
+          {
+            scale: 1,
+            duration: 300,
+          },
+        ],
+      });
+    }
+
+    filp(card) {
+      const chain = this.tweens.chain({
+        targets: card,
+        tweens: [
+          {
+            scale: 1.1,
+            duration: 300,
+          },
+          {
+            scaleX: 0,
+            duration: 300,
+            delay: 200,
+            onComplate: () => {
+              if (card.texture.key == "backend") {
+                card.setTexture("frontend");
+              } else {
+                card.setTexture("backend");
+              }
+            },
+          },
+          {
+            scaleX: 1.1,
+            duration: 300,
+          },
+          {
+            scale: 1,
+            duration: 300,
+          },
+        ],
+      });
+    }
+  }
+
+  const config = {
+    type: Phaser.AUTO,
+    width: 800,
+    height: 800,
+    scene: MyGame,
+    transparent: true,
+  };
+  const startGame = new Phaser.Game(config);
+</script>
